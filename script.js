@@ -6,6 +6,8 @@ class PrayerTimeApp {
         this.currentZone = null;
         this.prayerTimes = null;
         this.nextPrayerTimeout = null;
+        this.nextPrayerMinutes = null;
+        this.mainTimer = null;
         
         this.initializeElements();
         this.bindEvents();
@@ -44,6 +46,7 @@ class PrayerTimeApp {
         });
         this.zoneSelect.addEventListener('focus', () => this.restoreZoneFullText());
         this.zoneSelect.addEventListener('blur', () => this.updateZoneDisplayText());
+        this.zoneSelect.addEventListener('mousedown', () => this.restoreZoneFullText());
         this.retryBtn.addEventListener('click', () => this.retryLoadPrayerTimes());
     }
 
@@ -104,8 +107,10 @@ class PrayerTimeApp {
         this.zones.forEach(zone => {
             const option = document.createElement('option');
             option.value = zone.jakimCode;
-            option.textContent = `${zone.jakimCode} - ${zone.daerah}`;
+            const fullText = `${zone.jakimCode} - ${zone.daerah}`;
+            option.textContent = fullText;
             option.setAttribute('data-short-text', zone.jakimCode);
+            option.setAttribute('data-full-text', fullText);
             this.zoneSelect.appendChild(option);
         });
     }
@@ -121,12 +126,13 @@ class PrayerTimeApp {
     }
 
     restoreZoneFullText() {
-        this.zones.forEach((zone, index) => {
-            const option = this.zoneSelect.options[index + 1]; // +1 because first option is "Select Zone"
-            if (option) {
-                option.textContent = `${zone.jakimCode} - ${zone.daerah}`;
+        for (let i = 1; i < this.zoneSelect.options.length; i++) { // Start from 1 to skip "Select Zone"
+            const option = this.zoneSelect.options[i];
+            const fullText = option.getAttribute('data-full-text');
+            if (fullText) {
+                option.textContent = fullText;
             }
-        });
+        }
     }
 
     async onZoneChange(selectedZone) {
@@ -305,47 +311,19 @@ class PrayerTimeApp {
     }
 
     startCountdown(nextPrayerMinutes) {
-        if (this.nextPrayerTimeout) {
-            clearTimeout(this.nextPrayerTimeout);
-        }
-
-        const updateCountdown = () => {
-            const now = new Date();
-            const nowMinutes = now.getHours() * 60 + now.getMinutes();
-            const nowSeconds = now.getSeconds();
-            
-            // Calculate total seconds until next prayer
-            let totalSecondsLeft = (nextPrayerMinutes - nowMinutes) * 60 - nowSeconds;
-            
-            // Handle next day case
-            if (totalSecondsLeft <= 0) {
-                totalSecondsLeft += 24 * 60 * 60; // Add 24 hours in seconds
-            }
-            
-            if (totalSecondsLeft <= 1) {
-                // Refresh prayer times and next prayer calculation
-                setTimeout(() => this.updateNextPrayer(), 1000);
-                return;
-            }
-
-            const hours = Math.floor(totalSecondsLeft / 3600);
-            const minutes = Math.floor((totalSecondsLeft % 3600) / 60);
-            const seconds = totalSecondsLeft % 60;
-
-            this.nextPrayerCountdown.textContent = 
-                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-            this.nextPrayerTimeout = setTimeout(updateCountdown, 1000);
-        };
-
-        updateCountdown();
+        this.nextPrayerMinutes = nextPrayerMinutes;
+        // The countdown will be updated by the unified timer
     }
 
     startClock() {
-        const updateClock = () => {
+        if (this.mainTimer) {
+            clearInterval(this.mainTimer);
+        }
+
+        const updateAll = () => {
             const now = new Date();
             
-            // Format time
+            // Update current time display
             const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -354,7 +332,6 @@ class PrayerTimeApp {
                 timeZone: 'Asia/Kuala_Lumpur'
             };
             
-            // Format date
             const dateOptions = {
                 weekday: 'long',
                 year: 'numeric',
@@ -365,10 +342,41 @@ class PrayerTimeApp {
 
             this.currentTimeElement.textContent = now.toLocaleTimeString('en-US', timeOptions);
             this.currentDateElement.textContent = now.toLocaleDateString('en-US', dateOptions);
+            
+            // Update countdown if we have prayer times
+            if (this.nextPrayerMinutes !== null) {
+                this.updateCountdownDisplay(now);
+            }
         };
 
-        updateClock();
-        setInterval(updateClock, 1000);
+        updateAll();
+        this.mainTimer = setInterval(updateAll, 1000);
+    }
+
+    updateCountdownDisplay(now) {
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        const nowSeconds = now.getSeconds();
+        
+        // Calculate total seconds until next prayer
+        let totalSecondsLeft = (this.nextPrayerMinutes - nowMinutes) * 60 - nowSeconds;
+        
+        // Handle next day case
+        if (totalSecondsLeft <= 0) {
+            totalSecondsLeft += 24 * 60 * 60; // Add 24 hours in seconds
+        }
+        
+        if (totalSecondsLeft <= 1) {
+            // Refresh prayer times and next prayer calculation
+            setTimeout(() => this.updateNextPrayer(), 1000);
+            return;
+        }
+
+        const hours = Math.floor(totalSecondsLeft / 3600);
+        const minutes = Math.floor((totalSecondsLeft % 3600) / 60);
+        const seconds = totalSecondsLeft % 60;
+
+        this.nextPrayerCountdown.textContent = 
+            `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
     clearPrayerTimes() {
@@ -377,6 +385,7 @@ class PrayerTimeApp {
         });
         this.nextPrayerName.textContent = '--';
         this.nextPrayerCountdown.textContent = '--:--:--';
+        this.nextPrayerMinutes = null;
         
         document.querySelectorAll('.prayer-card').forEach(card => {
             card.classList.remove('active');
