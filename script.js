@@ -38,7 +38,12 @@ class PrayerTimeApp {
 
     bindEvents() {
         this.stateSelect.addEventListener('change', (e) => this.onStateChange(e.target.value));
-        this.zoneSelect.addEventListener('change', (e) => this.onZoneChange(e.target.value));
+        this.zoneSelect.addEventListener('change', (e) => {
+            this.onZoneChange(e.target.value);
+            this.updateZoneDisplayText();
+        });
+        this.zoneSelect.addEventListener('focus', () => this.restoreZoneFullText());
+        this.zoneSelect.addEventListener('blur', () => this.updateZoneDisplayText());
         this.retryBtn.addEventListener('click', () => this.retryLoadPrayerTimes());
     }
 
@@ -100,7 +105,27 @@ class PrayerTimeApp {
             const option = document.createElement('option');
             option.value = zone.jakimCode;
             option.textContent = `${zone.jakimCode} - ${zone.daerah}`;
+            option.setAttribute('data-short-text', zone.jakimCode);
             this.zoneSelect.appendChild(option);
+        });
+    }
+
+    updateZoneDisplayText() {
+        const selectedOption = this.zoneSelect.options[this.zoneSelect.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            const shortText = selectedOption.getAttribute('data-short-text');
+            if (shortText) {
+                selectedOption.textContent = shortText;
+            }
+        }
+    }
+
+    restoreZoneFullText() {
+        this.zones.forEach((zone, index) => {
+            const option = this.zoneSelect.options[index + 1]; // +1 because first option is "Select Zone"
+            if (option) {
+                option.textContent = `${zone.jakimCode} - ${zone.daerah}`;
+            }
         });
     }
 
@@ -152,9 +177,18 @@ class PrayerTimeApp {
         const today = new Date();
         const todayDay = today.getDate();
         
-        if (monthData && monthData.prayerTimes && Array.isArray(monthData.prayerTimes)) {
-            const todayData = monthData.prayerTimes.find(day => day.day === todayDay);
-            return todayData || null;
+        if (monthData && monthData.prayers && Array.isArray(monthData.prayers)) {
+            const todayData = monthData.prayers.find(day => day.day === todayDay);
+            if (todayData) {
+                // Convert Unix timestamps to time strings
+                return {
+                    fajr: this.timestampToTime(todayData.fajr),
+                    dhuhr: this.timestampToTime(todayData.dhuhr),
+                    asr: this.timestampToTime(todayData.asr),
+                    maghrib: this.timestampToTime(todayData.maghrib),
+                    isha: this.timestampToTime(todayData.isha)
+                };
+            }
         }
         
         return null;
@@ -167,6 +201,19 @@ class PrayerTimeApp {
             this.prayerTimeElements.asr.textContent = this.formatTime(data.asr);
             this.prayerTimeElements.maghrib.textContent = this.formatTime(data.maghrib);
             this.prayerTimeElements.isha.textContent = this.formatTime(data.isha);
+        }
+    }
+
+    timestampToTime(timestamp) {
+        if (!timestamp) return null;
+        
+        try {
+            const date = new Date(timestamp * 1000);
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        } catch (error) {
+            return null;
         }
     }
 
