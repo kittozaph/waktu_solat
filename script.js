@@ -2,6 +2,7 @@ class PrayerTimeApp {
     constructor() {
         this.states = [];
         this.zones = [];
+        this.allZones = [];
         this.currentZone = null;
         this.prayerTimes = null;
         this.nextPrayerTimeout = null;
@@ -46,6 +47,9 @@ class PrayerTimeApp {
             const response = await fetch('https://api.waktusolat.app/zones');
             const zones = await response.json();
             
+            // Store all zones for filtering
+            this.allZones = zones;
+            
             const statesSet = new Set();
             zones.forEach(zone => statesSet.add(zone.negeri));
             
@@ -76,10 +80,11 @@ class PrayerTimeApp {
         }
 
         try {
-            const response = await fetch(`https://api.waktusolat.app/zones/${selectedState}`);
-            const zones = await response.json();
+            // Filter zones from already loaded data instead of making API call
+            this.zones = this.allZones
+                .filter(zone => zone.negeri === selectedState)
+                .sort((a, b) => a.jakimCode.localeCompare(b.jakimCode));
             
-            this.zones = zones.sort((a, b) => a.jakimCode.localeCompare(b.jakimCode));
             this.populateZoneDropdown();
             this.zoneSelect.disabled = false;
             
