@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Times Malaysia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🕌 Prayer Times Malaysia</h1>
+            <div class="location-selector">
+                <div class="selector-group">
+                    <label for="state-select">State:</label>
+                    <select id="state-select">
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label for="zone-select">Zone:</label>
+                    <select id="zone-select" disabled>
+                        <option value="">Select Zone</option>
+                    </select>
+                </div>
+            </div>
+            <div class="current-location">
+                <span id="current-location-text">Please select a location</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="current-time">
+                <div class="time-display">
+                    <span id="current-time">--:--:--</span>
+                    <span id="current-date">-- --- ----</span>
+                </div>
+            </div>
+
+            <div class="next-prayer">
+                <div class="next-prayer-info">
+                    <span class="next-prayer-label">Next Prayer:</span>
+                    <span id="next-prayer-name">--</span>
+                    <span id="next-prayer-countdown">--:--:--</span>
+                </div>
+            </div>
+
+            <div class="prayer-times-grid">
+                <div class="prayer-card fajr">
+                    <div class="prayer-name">Fajr</div>
+                    <div class="prayer-time" id="fajr-time">--:--</div>
+                    <div class="prayer-arabic">الفجر</div>
+                </div>
+                
+                <div class="prayer-card dhuhr">
+                    <div class="prayer-name">Dhuhr</div>
+                    <div class="prayer-time" id="dhuhr-time">--:--</div>
+                    <div class="prayer-arabic">الظهر</div>
+                </div>
+                
+                <div class="prayer-card asr">
+                    <div class="prayer-name">Asr</div>
+                    <div class="prayer-time" id="asr-time">--:--</div>
+                    <div class="prayer-arabic">العصر</div>
+                </div>
+                
+                <div class="prayer-card maghrib">
+                    <div class="prayer-name">Maghrib</div>
+                    <div class="prayer-time" id="maghrib-time">--:--</div>
+                    <div class="prayer-arabic">المغرب</div>
+                </div>
+                
+                <div class="prayer-card isha">
+                    <div class="prayer-name">Isha</div>
+                    <div class="prayer-time" id="isha-time">--:--</div>
+                    <div class="prayer-arabic">العشاء</div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <span>Loading prayer times...</span>
+            </div>
+
+            <div class="error" id="error" style="display: none;">
+                <span id="error-message">Error loading prayer times</span>
+                <button id="retry-btn">Retry</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Prayer times for Malaysia | Data from waktusolat.app</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
