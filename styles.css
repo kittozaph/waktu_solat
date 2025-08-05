@@ -286,16 +286,25 @@ footer {
     .location-selector {
         flex-direction: column;
         gap: 15px;
+        align-items: center;
+    }
+    
+    .selector-group {
+        width: 100%;
+        max-width: 200px;
+        align-items: center;
     }
     
     select {
         min-width: 140px;
         max-width: 180px;
+        width: 100%;
     }
     
     #zone-select {
         min-width: 100px;
         max-width: 140px;
+        width: 100%;
     }
     
     .prayer-times-grid {
@@ -326,13 +335,21 @@ footer {
         grid-template-columns: 1fr;
     }
     
+    .selector-group {
+        width: 100%;
+        max-width: 180px;
+        align-items: center;
+    }
+    
     select {
         min-width: 120px;
         max-width: 160px;
+        width: 100%;
     }
     
     #zone-select {
         min-width: 90px;
         max-width: 120px;
+        width: 100%;
     }
 }

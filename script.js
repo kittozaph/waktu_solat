@@ -267,9 +267,10 @@ class PrayerTimeApp {
         // If no prayer found for today, next prayer is Fajr tomorrow
         if (!nextPrayer) {
             const [hours, minutes] = prayers[0].time.split(':').map(Number);
+            const fajrMinutes = hours * 60 + minutes;
             nextPrayer = {
                 ...prayers[0],
-                minutes: (hours * 60 + minutes) + (24 * 60)
+                minutes: fajrMinutes + (24 * 60) // Add 24 hours worth of minutes
             };
         }
 
@@ -277,7 +278,7 @@ class PrayerTimeApp {
         this.highlightCurrentPrayer(prayers, nowMinutes);
 
         this.nextPrayerName.textContent = nextPrayer.name;
-        this.startCountdown(nextPrayer.minutes - nowMinutes);
+        this.startCountdown(nextPrayer.minutes);
     }
 
     highlightCurrentPrayer(prayers, nowMinutes) {
@@ -303,28 +304,38 @@ class PrayerTimeApp {
         }
     }
 
-    startCountdown(minutesUntilNext) {
+    startCountdown(nextPrayerMinutes) {
         if (this.nextPrayerTimeout) {
             clearTimeout(this.nextPrayerTimeout);
         }
 
         const updateCountdown = () => {
-            if (minutesUntilNext <= 0) {
-                this.updateNextPrayer();
+            const now = new Date();
+            const nowMinutes = now.getHours() * 60 + now.getMinutes();
+            const nowSeconds = now.getSeconds();
+            
+            // Calculate total seconds until next prayer
+            let totalSecondsLeft = (nextPrayerMinutes - nowMinutes) * 60 - nowSeconds;
+            
+            // Handle next day case
+            if (totalSecondsLeft <= 0) {
+                totalSecondsLeft += 24 * 60 * 60; // Add 24 hours in seconds
+            }
+            
+            if (totalSecondsLeft <= 1) {
+                // Refresh prayer times and next prayer calculation
+                setTimeout(() => this.updateNextPrayer(), 1000);
                 return;
             }
 
-            const hours = Math.floor(minutesUntilNext / 60);
-            const minutes = minutesUntilNext % 60;
-            const seconds = 60 - new Date().getSeconds();
+            const hours = Math.floor(totalSecondsLeft / 3600);
+            const minutes = Math.floor((totalSecondsLeft % 3600) / 60);
+            const seconds = totalSecondsLeft % 60;
 
             this.nextPrayerCountdown.textContent = 
                 `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
-            this.nextPrayerTimeout = setTimeout(() => {
-                minutesUntilNext--;
-                updateCountdown();
-            }, 1000);
+            this.nextPrayerTimeout = setTimeout(updateCountdown, 1000);
         };
 
         updateCountdown();
