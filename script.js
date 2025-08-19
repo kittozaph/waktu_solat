@@ -360,13 +360,8 @@ class PrayerTimeApp {
         // Calculate total seconds until next prayer
         let totalSecondsLeft = (this.nextPrayerMinutes - nowMinutes) * 60 - nowSeconds;
         
-        // Handle next day case
+        // If countdown has reached zero or gone negative, recalculate next prayer
         if (totalSecondsLeft <= 0) {
-            totalSecondsLeft += 24 * 60 * 60; // Add 24 hours in seconds
-        }
-        
-        if (totalSecondsLeft <= 1) {
-            // Refresh prayer times and next prayer calculation
             this.updateNextPrayer();
             return;
         }
