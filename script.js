@@ -367,7 +367,7 @@ class PrayerTimeApp {
         
         if (totalSecondsLeft <= 1) {
             // Refresh prayer times and next prayer calculation
-            setTimeout(() => this.updateNextPrayer(), 1000);
+            this.updateNextPrayer();
             return;
         }
 
