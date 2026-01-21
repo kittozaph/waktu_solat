@@ -286,11 +286,11 @@ class PrayerTimeApp {
             card.classList.remove('active');
         });
 
-        // Show/hide Imsak and Syuruk based on current time
-        this.updateImsakSyurukVisibility(nowMinutes, prayers);
-
         let nextPrayer = null;
         const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+        // Show/hide Imsak and Syuruk based on current time
+        this.updateImsakSyurukVisibility(nowMinutes, prayers);
 
         for (const prayer of prayers) {
             const [hours, minutes] = prayer.time.split(':').map(Number);
