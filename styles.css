@@ -19,7 +19,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
+    background:
         radial-gradient(ellipse at 20% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
     pointer-events: none;
@@ -154,6 +154,41 @@ select option {
     padding: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Fasting Group - Imsak, Subuh, Syuruk */
+.fasting-group {
+    margin-bottom: 30px;
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.15), rgba(45, 27, 78, 0.95));
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fasting-group.hidden {
+    display: none;
+}
+
+.fasting-group-label {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #8b5cf6;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.fasting-group-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.fasting-group-cards .prayer-card {
+    background: linear-gradient(145deg, rgba(45, 27, 78, 0.7), rgba(26, 10, 46, 0.85));
 }
 
 .next-prayer-info {
@@ -302,8 +337,13 @@ select option {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .error {
@@ -358,6 +398,7 @@ footer {
     from {
         box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
     }
+
     to {
         box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
     }
@@ -367,55 +408,64 @@ footer {
     .container {
         padding: 15px;
     }
-    
+
     h1 {
         font-size: 2rem;
     }
-    
+
     .location-selector {
         flex-direction: column;
         gap: 15px;
         align-items: center;
     }
-    
+
     .selector-group {
         width: 100%;
         max-width: 200px;
         align-items: center;
     }
-    
+
     select {
         min-width: 140px;
         max-width: 180px;
         width: 100%;
     }
-    
+
     #zone-select {
         min-width: 100px;
         max-width: 140px;
         width: 100%;
     }
-    
+
     .prayer-times-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 15px;
     }
-    
+
     .prayer-card {
         padding: 20px;
     }
-    
+
     .prayer-time {
         font-size: 1.5rem;
     }
-    
+
     #current-time {
         font-size: 2rem;
     }
-    
+
     .next-prayer-info {
         flex-direction: column;
         gap: 10px;
+    }
+
+    .fasting-group-cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .fasting-group {
+        padding: 15px;
     }
 }
 
@@ -423,19 +473,19 @@ footer {
     .prayer-times-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .selector-group {
         width: 100%;
         max-width: 180px;
         align-items: center;
     }
-    
+
     select {
         min-width: 120px;
         max-width: 160px;
         width: 100%;
     }
-    
+
     #zone-select {
         min-width: 90px;
         max-width: 120px;

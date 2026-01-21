@@ -286,6 +286,9 @@ class PrayerTimeApp {
             card.classList.remove('active');
         });
 
+        // Show/hide Imsak and Syuruk based on current time
+        this.updateImsakSyurukVisibility(nowMinutes, prayers);
+
         let nextPrayer = null;
         const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -336,6 +339,34 @@ class PrayerTimeApp {
             if (prayerCard) {
                 prayerCard.classList.add('active');
             }
+        }
+    }
+
+    updateImsakSyurukVisibility(nowMinutes, prayers) {
+        const fastingGroup = document.getElementById('fasting-group');
+
+        if (!fastingGroup) return;
+
+        // Get Syuruk and Isyak times in minutes
+        const syurukPrayer = prayers.find(p => p.element === 'syuruk');
+        const isyakPrayer = prayers.find(p => p.element === 'isha');
+
+        if (!syurukPrayer || !isyakPrayer) return;
+
+        const [syurukHours, syurukMins] = syurukPrayer.time.split(':').map(Number);
+        const [isyakHours, isyakMins] = isyakPrayer.time.split(':').map(Number);
+
+        const syurukMinutes = syurukHours * 60 + syurukMins;
+        const isyakMinutes = isyakHours * 60 + isyakMins;
+
+        // Hide after Syuruk, show again after Isyak
+        // Group is visible: from Isyak until Syuruk (next day morning)
+        const shouldHide = nowMinutes >= syurukMinutes && nowMinutes < isyakMinutes;
+
+        if (shouldHide) {
+            fastingGroup.classList.add('hidden');
+        } else {
+            fastingGroup.classList.remove('hidden');
         }
     }
 
