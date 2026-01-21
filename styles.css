@@ -6,9 +6,24 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #0d1f2d 100%);
     min-height: 100vh;
     color: #333;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 20% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .container {
@@ -20,18 +35,23 @@ body {
 header {
     text-align: center;
     margin-bottom: 30px;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(145deg, rgba(45, 27, 78, 0.95), rgba(26, 10, 46, 0.95));
     border-radius: 15px;
     padding: 25px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(212, 175, 55, 0.2);
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 h1 {
     font-size: 2.5rem;
-    color: #2c3e50;
+    background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 20px;
     font-weight: 600;
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
 }
 
 .location-selector {
@@ -52,18 +72,19 @@ h1 {
 
 .selector-group label {
     font-weight: 600;
-    color: #555;
+    color: #d4af37;
 }
 
 select {
     padding: 10px 15px;
-    border: 2px solid #ddd;
+    border: 2px solid rgba(212, 175, 55, 0.3);
     border-radius: 8px;
     font-size: 1rem;
-    background: white;
+    background: rgba(45, 27, 78, 0.8);
+    color: #e8e6e3;
     min-width: 160px;
     max-width: 200px;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 #zone-select {
@@ -73,28 +94,35 @@ select {
 
 select:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #d4af37;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 select:disabled {
-    background: #f5f5f5;
-    color: #999;
+    background: rgba(30, 20, 50, 0.6);
+    color: #666;
     cursor: not-allowed;
+}
+
+select option {
+    background: #2d1b4e;
+    color: #e8e6e3;
 }
 
 .current-location {
     font-size: 1.1rem;
-    color: #666;
+    color: #10b981;
     font-weight: 500;
 }
 
 .current-time {
     text-align: center;
     margin-bottom: 20px;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(145deg, rgba(45, 27, 78, 0.95), rgba(26, 10, 46, 0.95));
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .time-display {
@@ -107,23 +135,25 @@ select:disabled {
 #current-time {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: #d4af37;
     font-family: 'Courier New', monospace;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
 }
 
 #current-date {
     font-size: 1.2rem;
-    color: #666;
+    color: #a8a29e;
     font-weight: 500;
 }
 
 .next-prayer {
     text-align: center;
     margin-bottom: 30px;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.2), rgba(45, 27, 78, 0.95));
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .next-prayer-info {
@@ -136,20 +166,21 @@ select:disabled {
 
 .next-prayer-label {
     font-size: 1.1rem;
-    color: #666;
+    color: #a8a29e;
 }
 
 #next-prayer-name {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #e74c3c;
+    color: #10b981;
 }
 
 #next-prayer-countdown {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #e74c3c;
+    color: #d4af37;
     font-family: 'Courier New', monospace;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 .prayer-times-grid {
@@ -160,30 +191,52 @@ select:disabled {
 }
 
 .prayer-card {
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(145deg, rgba(45, 27, 78, 0.9), rgba(26, 10, 46, 0.95));
     border-radius: 15px;
     padding: 25px;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
 }
 
 .prayer-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 40px rgba(212, 175, 55, 0.2);
+    border-color: rgba(212, 175, 55, 0.4);
 }
 
 .prayer-card.active {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     transform: scale(1.05);
+    border-color: #10b981;
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+}
+
+/* Special styling for Imsak card */
+.prayer-card.imsak {
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.prayer-card.imsak:hover {
+    border-color: rgba(139, 92, 246, 0.6);
+}
+
+/* Special styling for Syuruk card */
+.prayer-card.syuruk {
+    border-color: rgba(251, 191, 36, 0.3);
+}
+
+.prayer-card.syuruk:hover {
+    border-color: rgba(251, 191, 36, 0.6);
 }
 
 .prayer-name {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: #d4af37;
     margin-bottom: 10px;
 }
 
@@ -194,7 +247,7 @@ select:disabled {
 .prayer-time {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #667eea;
+    color: #10b981;
     margin-bottom: 8px;
     font-family: 'Courier New', monospace;
 }
@@ -205,7 +258,7 @@ select:disabled {
 
 .prayer-arabic {
     font-size: 1rem;
-    color: #666;
+    color: #a8a29e;
     font-weight: 500;
 }
 
@@ -213,13 +266,25 @@ select:disabled {
     color: rgba(255, 255, 255, 0.9);
 }
 
+/* Imsak specific colors */
+.prayer-card.imsak .prayer-time {
+    color: #8b5cf6;
+}
+
+/* Syuruk specific colors */
+.prayer-card.syuruk .prayer-time {
+    color: #fbbf24;
+}
+
 .loading {
     text-align: center;
     padding: 40px;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(145deg, rgba(45, 27, 78, 0.95), rgba(26, 10, 46, 0.95));
     border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     display: none;
+    color: #d4af37;
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .loading.show {
@@ -229,8 +294,8 @@ select:disabled {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #667eea;
+    border: 4px solid rgba(212, 175, 55, 0.2);
+    border-top: 4px solid #d4af37;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 15px;
@@ -244,34 +309,58 @@ select:disabled {
 .error {
     text-align: center;
     padding: 20px;
-    background: rgba(231, 76, 60, 0.1);
-    border: 2px solid #e74c3c;
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid #ef4444;
     border-radius: 15px;
-    color: #e74c3c;
+    color: #ef4444;
     margin-bottom: 20px;
 }
 
 #retry-btn {
-    background: #e74c3c;
-    color: white;
+    background: linear-gradient(135deg, #d4af37, #f4d03f);
+    color: #1a0a2e;
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
     margin-top: 10px;
-    transition: background 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-weight: 600;
 }
 
 #retry-btn:hover {
-    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 footer {
     text-align: center;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(212, 175, 55, 0.6);
     font-size: 0.9rem;
     margin-top: 30px;
+}
+
+/* Ramadhan decorative elements */
+.ramadhan-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #d4af37, #f4d03f);
+    color: #1a0a2e;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+    }
 }
 
 @media (max-width: 768px) {

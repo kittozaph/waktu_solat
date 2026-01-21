@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prayer Times Malaysia</title>
+    <title>Waktu Solat Malaysia - Ramadhan</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>🕌 Prayer Times Malaysia</h1>
+            <div class="ramadhan-badge">🌙 Ramadhan Kareem</div>
+            <h1>☪️ Waktu Solat Malaysia</h1>
             <div class="location-selector">
                 <div class="selector-group">
                     <label for="state-select">State:</label>
@@ -46,30 +49,42 @@
             </div>
 
             <div class="prayer-times-grid">
+                <div class="prayer-card imsak">
+                    <div class="prayer-name">Imsak</div>
+                    <div class="prayer-time" id="imsak-time">--:--</div>
+                    <div class="prayer-arabic">إمساك</div>
+                </div>
+
                 <div class="prayer-card fajr">
-                    <div class="prayer-name">Fajr</div>
+                    <div class="prayer-name">Subuh</div>
                     <div class="prayer-time" id="fajr-time">--:--</div>
                     <div class="prayer-arabic">الفجر</div>
                 </div>
-                
+
+                <div class="prayer-card syuruk">
+                    <div class="prayer-name">Syuruk</div>
+                    <div class="prayer-time" id="syuruk-time">--:--</div>
+                    <div class="prayer-arabic">شروق</div>
+                </div>
+
                 <div class="prayer-card dhuhr">
-                    <div class="prayer-name">Dhuhr</div>
+                    <div class="prayer-name">Zohor</div>
                     <div class="prayer-time" id="dhuhr-time">--:--</div>
                     <div class="prayer-arabic">الظهر</div>
                 </div>
-                
+
                 <div class="prayer-card asr">
                     <div class="prayer-name">Asr</div>
                     <div class="prayer-time" id="asr-time">--:--</div>
                     <div class="prayer-arabic">العصر</div>
                 </div>
-                
+
                 <div class="prayer-card maghrib">
                     <div class="prayer-name">Maghrib</div>
                     <div class="prayer-time" id="maghrib-time">--:--</div>
                     <div class="prayer-arabic">المغرب</div>
                 </div>
-                
+
                 <div class="prayer-card isha">
                     <div class="prayer-name">Isha</div>
                     <div class="prayer-time" id="isha-time">--:--</div>
@@ -95,4 +110,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

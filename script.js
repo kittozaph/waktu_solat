@@ -8,7 +8,7 @@ class PrayerTimeApp {
         this.nextPrayerTimeout = null;
         this.nextPrayerMinutes = null;
         this.mainTimer = null;
-        
+
         this.initializeElements();
         this.bindEvents();
         this.loadStates();
@@ -30,7 +30,9 @@ class PrayerTimeApp {
         this.retryBtn = document.getElementById('retry-btn');
 
         this.prayerTimeElements = {
+            imsak: document.getElementById('imsak-time'),
             fajr: document.getElementById('fajr-time'),
+            syuruk: document.getElementById('syuruk-time'),
             dhuhr: document.getElementById('dhuhr-time'),
             asr: document.getElementById('asr-time'),
             maghrib: document.getElementById('maghrib-time'),
@@ -54,16 +56,16 @@ class PrayerTimeApp {
         try {
             const response = await fetch('https://api.waktusolat.app/zones');
             const zones = await response.json();
-            
+
             // Store all zones for filtering
             this.allZones = zones;
-            
+
             const statesSet = new Set();
             zones.forEach(zone => statesSet.add(zone.negeri));
-            
+
             this.states = Array.from(statesSet).sort();
             this.populateStateDropdown();
-            
+
         } catch (error) {
             console.error('Error loading states:', error);
             this.showError('Failed to load states');
@@ -92,10 +94,10 @@ class PrayerTimeApp {
             this.zones = this.allZones
                 .filter(zone => zone.negeri === selectedState)
                 .sort((a, b) => a.jakimCode.localeCompare(b.jakimCode));
-            
+
             this.populateZoneDropdown();
             this.zoneSelect.disabled = false;
-            
+
         } catch (error) {
             console.error('Error loading zones:', error);
             this.showError('Failed to load zones for ' + selectedState);
@@ -159,19 +161,19 @@ class PrayerTimeApp {
             const today = new Date();
             const year = today.getFullYear();
             const month = today.getMonth() + 1;
-            
+
             const response = await fetch(`https://api.waktusolat.app/v2/solat/${zoneCode}?year=${year}&month=${month}`);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             this.prayerTimes = this.getTodaysPrayerTimes(data);
             this.displayPrayerTimes(this.prayerTimes);
             this.updateNextPrayer();
             this.hideLoading();
-            
+
         } catch (error) {
             console.error('Error loading prayer times:', error);
             this.hideLoading();
@@ -182,13 +184,16 @@ class PrayerTimeApp {
     getTodaysPrayerTimes(monthData) {
         const today = new Date();
         const todayDay = today.getDate();
-        
+
         if (monthData && monthData.prayers && Array.isArray(monthData.prayers)) {
             const todayData = monthData.prayers.find(day => day.day === todayDay);
             if (todayData) {
                 // Convert Unix timestamps to time strings
+                const fajrTime = this.timestampToTime(todayData.fajr);
                 return {
-                    fajr: this.timestampToTime(todayData.fajr),
+                    imsak: this.calculateImsak(fajrTime),
+                    fajr: fajrTime,
+                    syuruk: this.timestampToTime(todayData.syuruk),
                     dhuhr: this.timestampToTime(todayData.dhuhr),
                     asr: this.timestampToTime(todayData.asr),
                     maghrib: this.timestampToTime(todayData.maghrib),
@@ -196,13 +201,35 @@ class PrayerTimeApp {
                 };
             }
         }
-        
+
         return null;
+    }
+
+    calculateImsak(fajrTime) {
+        if (!fajrTime) return null;
+
+        try {
+            const [hours, minutes] = fajrTime.split(':').map(Number);
+            let totalMinutes = hours * 60 + minutes - 10; // 10 minutes before Fajr
+
+            if (totalMinutes < 0) {
+                totalMinutes += 24 * 60;
+            }
+
+            const imsakHours = Math.floor(totalMinutes / 60);
+            const imsakMinutes = totalMinutes % 60;
+
+            return `${String(imsakHours).padStart(2, '0')}:${String(imsakMinutes).padStart(2, '0')}`;
+        } catch (error) {
+            return null;
+        }
     }
 
     displayPrayerTimes(data) {
         if (data) {
+            this.prayerTimeElements.imsak.textContent = this.formatTime(data.imsak);
             this.prayerTimeElements.fajr.textContent = this.formatTime(data.fajr);
+            this.prayerTimeElements.syuruk.textContent = this.formatTime(data.syuruk);
             this.prayerTimeElements.dhuhr.textContent = this.formatTime(data.dhuhr);
             this.prayerTimeElements.asr.textContent = this.formatTime(data.asr);
             this.prayerTimeElements.maghrib.textContent = this.formatTime(data.maghrib);
@@ -212,7 +239,7 @@ class PrayerTimeApp {
 
     timestampToTime(timestamp) {
         if (!timestamp) return null;
-        
+
         try {
             const date = new Date(timestamp * 1000);
             const hours = date.getHours();
@@ -225,15 +252,15 @@ class PrayerTimeApp {
 
     formatTime(timeString) {
         if (!timeString) return '--:--';
-        
+
         try {
             const [hours, minutes] = timeString.split(':');
             const hour24 = parseInt(hours);
             const minute = parseInt(minutes);
-            
+
             const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
             const ampm = hour24 >= 12 ? 'PM' : 'AM';
-            
+
             return `${hour12}:${String(minute).padStart(2, '0')} ${ampm}`;
         } catch (error) {
             return timeString;
@@ -245,11 +272,13 @@ class PrayerTimeApp {
 
         const now = new Date();
         const prayers = [
-            { name: 'Fajr', time: this.prayerTimes.fajr, element: 'fajr' },
-            { name: 'Dhuhr', time: this.prayerTimes.dhuhr, element: 'dhuhr' },
-            { name: 'Asr', time: this.prayerTimes.asr, element: 'asr' },
+            { name: 'Imsak', time: this.prayerTimes.imsak, element: 'imsak' },
+            { name: 'Subuh', time: this.prayerTimes.fajr, element: 'fajr' },
+            { name: 'Syuruk', time: this.prayerTimes.syuruk, element: 'syuruk' },
+            { name: 'Zohor', time: this.prayerTimes.dhuhr, element: 'dhuhr' },
+            { name: 'Asar', time: this.prayerTimes.asr, element: 'asr' },
             { name: 'Maghrib', time: this.prayerTimes.maghrib, element: 'maghrib' },
-            { name: 'Isha', time: this.prayerTimes.isha, element: 'isha' }
+            { name: 'Isyak', time: this.prayerTimes.isha, element: 'isha' }
         ];
 
         // Clear previous active states
@@ -322,7 +351,7 @@ class PrayerTimeApp {
 
         const updateAll = () => {
             const now = new Date();
-            
+
             // Update current time display
             const timeOptions = {
                 hour: '2-digit',
@@ -331,7 +360,7 @@ class PrayerTimeApp {
                 hour12: false,
                 timeZone: 'Asia/Kuala_Lumpur'
             };
-            
+
             const dateOptions = {
                 weekday: 'long',
                 year: 'numeric',
@@ -342,7 +371,7 @@ class PrayerTimeApp {
 
             this.currentTimeElement.textContent = now.toLocaleTimeString('en-US', timeOptions);
             this.currentDateElement.textContent = now.toLocaleDateString('en-US', dateOptions);
-            
+
             // Update countdown if we have prayer times
             if (this.nextPrayerMinutes !== null) {
                 this.updateCountdownDisplay(now);
@@ -356,10 +385,10 @@ class PrayerTimeApp {
     updateCountdownDisplay(now) {
         const nowMinutes = now.getHours() * 60 + now.getMinutes();
         const nowSeconds = now.getSeconds();
-        
+
         // Calculate total seconds until next prayer
         let totalSecondsLeft = (this.nextPrayerMinutes - nowMinutes) * 60 - nowSeconds;
-        
+
         // If countdown has reached zero or gone negative, recalculate next prayer
         if (totalSecondsLeft <= 0) {
             this.updateNextPrayer();
@@ -370,7 +399,7 @@ class PrayerTimeApp {
         const minutes = Math.floor((totalSecondsLeft % 3600) / 60);
         const seconds = totalSecondsLeft % 60;
 
-        this.nextPrayerCountdown.textContent = 
+        this.nextPrayerCountdown.textContent =
             `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
@@ -381,7 +410,7 @@ class PrayerTimeApp {
         this.nextPrayerName.textContent = '--';
         this.nextPrayerCountdown.textContent = '--:--:--';
         this.nextPrayerMinutes = null;
-        
+
         document.querySelectorAll('.prayer-card').forEach(card => {
             card.classList.remove('active');
         });
