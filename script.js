@@ -344,6 +344,9 @@ class PrayerTimeApp {
 
     updateImsakSyurukVisibility(nowMinutes, prayers) {
         const fastingGroup = document.getElementById('fasting-group');
+        const fastingGroupLabel = document.querySelector('.fasting-group-label');
+        const imsakCard = document.querySelector('.prayer-card.imsak');
+        const syurukCard = document.querySelector('.prayer-card.syuruk');
 
         if (!fastingGroup) return;
 
@@ -359,13 +362,21 @@ class PrayerTimeApp {
         const syurukMinutes = syurukHours * 60 + syurukMins;
         const isyakMinutes = isyakHours * 60 + isyakMins;
 
-        // Hide after Syuruk, show again after Isyak
-        // Group is visible: from Isyak until Syuruk (next day morning)
-        const shouldHide = nowMinutes >= syurukMinutes && nowMinutes < isyakMinutes;
+        // After Syuruk and before Isyak: show only Subuh with label "Subuh"
+        // Before Syuruk or after Isyak: show full group with "Waktu Puasa"
+        const isAfterSyuruk = nowMinutes >= syurukMinutes && nowMinutes < isyakMinutes;
 
-        if (shouldHide) {
-            fastingGroup.classList.add('hidden');
+        if (isAfterSyuruk) {
+            // Show only Subuh with "Subuh" label
+            fastingGroupLabel.textContent = 'Subuh';
+            if (imsakCard) imsakCard.classList.add('hidden');
+            if (syurukCard) syurukCard.classList.add('hidden');
+            fastingGroup.classList.remove('hidden');
         } else {
+            // Show full group with "Waktu Puasa" label
+            fastingGroupLabel.textContent = 'Waktu Puasa';
+            if (imsakCard) imsakCard.classList.remove('hidden');
+            if (syurukCard) syurukCard.classList.remove('hidden');
             fastingGroup.classList.remove('hidden');
         }
     }
