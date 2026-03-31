@@ -197,7 +197,6 @@ select:disabled {
     border: 1px solid #e8e6e1;
     border-radius: 12px;
     margin-bottom: 1.5rem;
-    overflow: hidden;
     box-shadow: 0 4px 20px rgba(0,0,0,0.02);
 }
 
@@ -209,11 +208,18 @@ select:disabled {
     border-right: 1px solid #e8e6e1;
 }
 
+.morning-container .prayer-card:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
 .morning-container .prayer-card:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
     border-right: none;
 }
 
-.morning-container .prayer-card:hover {
+.morning-container .prayer-card:not(.active):hover {
     transform: none;
     background: #fdfdf9; /* Very slight warm grey-white on hover */
 }
@@ -221,6 +227,13 @@ select:disabled {
 .morning-container .prayer-card.active {
     transform: none;
     box-shadow: none;
+}
+
+.morning-container .prayer-card.active:hover {
+    transform: none;
+    background: #1b3826;
+    box-shadow: 0 0 20px rgba(201, 171, 95, 0.5); /* Gold glow */
+    z-index: 10;
 }
 
 .prayer-times-grid {
@@ -238,9 +251,10 @@ select:disabled {
     text-align: center;
     transition: all 0.2s ease;
     box-shadow: 0 2px 10px rgba(0,0,0,0.01);
+    position: relative;
 }
 
-.prayer-card:hover {
+.prayer-card:not(.active):hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(27,56,38,0.06);
 }
@@ -252,6 +266,15 @@ select:disabled {
     border-color: #1b3826;
     transform: scale(1.05);
     box-shadow: 0 10px 30px rgba(27,56,38,0.25);
+    z-index: 5;
+}
+
+.prayer-card.active:hover {
+    background: #1b3826;
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 0 25px rgba(201, 171, 95, 0.6); /* Enhanced Gold Glow */
+    border-color: #c9ab5f;
+    z-index: 10;
 }
 
 .prayer-card.active .prayer-time {
