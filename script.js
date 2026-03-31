@@ -11,22 +11,24 @@ class PrayerTimeApp {
 
         this.initializeElements();
         this.bindEvents();
-        this.loadStates();
-        this.loadSavedLocation();
         this.startClock();
+        this.init();
+    }
+
+    async init() {
+        await this.loadStates();
+        this.loadSavedLocation();
     }
 
     initializeElements() {
         this.stateSelect = document.getElementById('state-select');
         this.zoneSelect = document.getElementById('zone-select');
-        this.saveBtn = document.getElementById('save-location-btn');
-        this.toast = document.getElementById('toast');
+        // Removed saveBtn and toast
         this.currentLocationText = document.getElementById('current-location-text');
         this.currentTimeElement = document.getElementById('current-time');
         this.currentDateElement = document.getElementById('current-date');
         this.nextPrayerName = document.getElementById('next-prayer-name');
         this.nextPrayerCountdown = document.getElementById('next-prayer-countdown');
-        this.loadingElement = document.getElementById('loading');
         this.errorElement = document.getElementById('error');
         this.errorMessage = document.getElementById('error-message');
         this.retryBtn = document.getElementById('retry-btn');
@@ -51,7 +53,7 @@ class PrayerTimeApp {
         this.zoneSelect.addEventListener('focus', () => this.restoreZoneFullText());
         this.zoneSelect.addEventListener('blur', () => this.updateZoneDisplayText());
         this.zoneSelect.addEventListener('mousedown', () => this.restoreZoneFullText());
-        this.saveBtn.addEventListener('click', () => this.onSaveLocation());
+        // Removed save binding
         this.retryBtn.addEventListener('click', () => this.retryLoadPrayerTimes());
     }
 
@@ -143,7 +145,6 @@ class PrayerTimeApp {
     async onZoneChange(selectedZone) {
         if (!selectedZone) {
             this.currentLocationText.textContent = 'Please select a location';
-            this.saveBtn.disabled = true;
             this.clearPrayerTimes();
             return;
         }
@@ -152,14 +153,12 @@ class PrayerTimeApp {
         if (zone) {
             this.currentZone = zone;
             this.currentLocationText.textContent = `${zone.negeri} - ${zone.jakimCode} (${zone.daerah})`;
-            this.saveBtn.disabled = false;
-            this.saveBtn.classList.remove('saved');
+            this.saveLocation(zone.negeri, zone.jakimCode);
             await this.loadPrayerTimes(selectedZone);
         }
     }
 
     async loadPrayerTimes(zoneCode) {
-        this.showLoading();
         this.hideError();
 
         try {
@@ -177,11 +176,9 @@ class PrayerTimeApp {
             this.prayerTimes = this.getTodaysPrayerTimes(data);
             this.displayPrayerTimes(this.prayerTimes);
             this.updateNextPrayer();
-            this.hideLoading();
 
         } catch (error) {
             console.error('Error loading prayer times:', error);
-            this.hideLoading();
             this.showError('Failed to load prayer times. Please try again.');
         }
     }
@@ -432,25 +429,9 @@ class PrayerTimeApp {
         }
     }
 
-    onSaveLocation() {
-        if (!this.currentZone) return;
-        this.saveLocation(this.currentZone.negeri, this.currentZone.jakimCode);
-        this.saveBtn.classList.add('saved');
-        this.showToast('Location saved successfully!');
-    }
-
     saveLocation(state, zone) {
         localStorage.setItem('selectedState', state);
         localStorage.setItem('selectedZone', zone);
-    }
-
-    showToast(message) {
-        const toastMessage = this.toast.querySelector('.toast-message');
-        if (toastMessage) toastMessage.textContent = message;
-        this.toast.classList.add('show');
-        setTimeout(() => {
-            this.toast.classList.remove('show');
-        }, 2500);
     }
 
     loadSavedLocation() {
@@ -466,14 +447,6 @@ class PrayerTimeApp {
                 }
             });
         }
-    }
-
-    showLoading() {
-        this.loadingElement.classList.add('show');
-    }
-
-    hideLoading() {
-        this.loadingElement.classList.remove('show');
     }
 
     showError(message) {

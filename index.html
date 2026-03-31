@@ -4,14 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waktu Solat Malaysia - Ramadhan</title>
+    <title>Waktu Solat Malaysia</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <div class="ramadhan-badge">🌙 Ramadhan Kareem</div>
             <h1>Waktu Solat Malaysia</h1>
             <div class="location-selector">
                 <div class="selector-group">
@@ -26,18 +25,8 @@
                         <option value="">Select Zone</option>
                     </select>
                 </div>
-                <div class="selector-group">
-                    <button id="save-location-btn" disabled>
-                        <span class="save-icon">💾</span> Save
-                    </button>
-                </div>
             </div>
 
-            <!-- Toast notification -->
-            <div id="toast" class="toast">
-                <span class="toast-icon">✅</span>
-                <span class="toast-message">Location saved!</span>
-            </div>
             <div class="current-location">
                 <span id="current-location-text">Please select a location</span>
             </div>
@@ -59,31 +48,28 @@
                 </div>
             </div>
 
-            <!-- Fasting Group: Imsak, Subuh, Syuruk -->
-            <div class="fasting-group" id="fasting-group">
-                <div class="fasting-group-label">Subuh</div>
-                <div class="fasting-group-cards">
-                    <div class="prayer-card imsak">
-                        <div class="prayer-name">Imsak</div>
-                        <div class="prayer-time" id="imsak-time">--:--</div>
-                        <div class="prayer-arabic">إمساك</div>
-                    </div>
+            <div class="morning-container">
+                <div class="prayer-card imsak">
+                    <div class="prayer-name">Imsak</div>
+                    <div class="prayer-time" id="imsak-time">--:--</div>
+                    <div class="prayer-arabic">إمساك</div>
+                </div>
 
-                    <div class="prayer-card fajr">
-                        <div class="prayer-name">Subuh</div>
-                        <div class="prayer-time" id="fajr-time">--:--</div>
-                        <div class="prayer-arabic">الفجر</div>
-                    </div>
+                <div class="prayer-card fajr">
+                    <div class="prayer-name">Subuh</div>
+                    <div class="prayer-time" id="fajr-time">--:--</div>
+                    <div class="prayer-arabic">الفجر</div>
+                </div>
 
-                    <div class="prayer-card syuruk">
-                        <div class="prayer-name">Syuruk</div>
-                        <div class="prayer-time" id="syuruk-time">--:--</div>
-                        <div class="prayer-arabic">شروق</div>
-                    </div>
+                <div class="prayer-card syuruk">
+                    <div class="prayer-name">Syuruk</div>
+                    <div class="prayer-time" id="syuruk-time">--:--</div>
+                    <div class="prayer-arabic">شروق</div>
                 </div>
             </div>
 
             <div class="prayer-times-grid">
+
                 <div class="prayer-card dhuhr">
                     <div class="prayer-name">Zohor</div>
                     <div class="prayer-time" id="dhuhr-time">--:--</div>
@@ -107,11 +93,6 @@
                     <div class="prayer-time" id="isha-time">--:--</div>
                     <div class="prayer-arabic">العشاء</div>
                 </div>
-            </div>
-
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <span>Loading prayer times...</span>
             </div>
 
             <div class="error" id="error" style="display: none;">
