@@ -146,6 +146,7 @@ class PrayerTimeApp {
             this.prayerTimes = this.getTodaysPrayerTimes(data);
             this.displayPrayerTimes(this.prayerTimes);
             this.updateNextPrayer();
+            this.displayMonthlyTable(data);
 
         } catch (error) {
             console.error('Error loading prayer times:', error);
@@ -195,6 +196,43 @@ class PrayerTimeApp {
         } catch (error) {
             return null;
         }
+    }
+
+    displayMonthlyTable(monthData) {
+        const tableBody = document.getElementById('monthly-table-body');
+        if (!tableBody || !monthData || !monthData.prayers) return;
+
+        tableBody.innerHTML = '';
+        
+        const today = new Date();
+        const todayDay = today.getDate();
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        
+        monthData.prayers.forEach(dayData => {
+            const tr = document.createElement('tr');
+            if (dayData.day === todayDay) {
+                tr.classList.add('today-row');
+            }
+            
+            const dateObj = new Date(year, month, dayData.day);
+            const dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            
+            const fajrTime = this.timestampToTime(dayData.fajr);
+            const imsakTime = this.calculateImsak(fajrTime);
+            
+            tr.innerHTML = `
+                <td class="date-col">${dateStr}</td>
+                <td>${this.formatTime(imsakTime)}</td>
+                <td>${this.formatTime(fajrTime)}</td>
+                <td>${this.formatTime(this.timestampToTime(dayData.syuruk))}</td>
+                <td>${this.formatTime(this.timestampToTime(dayData.dhuhr))}</td>
+                <td>${this.formatTime(this.timestampToTime(dayData.asr))}</td>
+                <td>${this.formatTime(this.timestampToTime(dayData.maghrib))}</td>
+                <td>${this.formatTime(this.timestampToTime(dayData.isha))}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
     }
 
     displayPrayerTimes(data) {

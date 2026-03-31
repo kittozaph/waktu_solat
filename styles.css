@@ -309,6 +309,77 @@ select:disabled {
     color: #a3a19b;
 }
 
+/* Monthly Table */
+.monthly-table-container {
+    margin-bottom: 2rem;
+    background: #fff;
+    border: 1px solid #e8e6e1;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.monthly-title {
+    font-size: 1.5rem;
+    color: #1b3826; /* Deep Green */
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 300;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.monthly-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    font-size: 0.95rem;
+}
+
+.monthly-table th {
+    background-color: #f6f5ef;
+    color: #556b5a;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+    border-bottom: 2px solid #e8e6e1;
+    text-align: center;
+}
+
+.monthly-table td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e8e6e1;
+    color: #2c2a28;
+    font-variant-numeric: tabular-nums;
+}
+
+.monthly-table tr:hover {
+    background-color: #fdfdf9;
+}
+
+.monthly-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Highlight today's row in table */
+.today-row {
+    background-color: #1b3826 !important;
+}
+
+.today-row td {
+    color: #fff !important;
+    font-weight: 500;
+    border-color: #1b3826;
+}
+
+.today-row .date-col {
+    color: #d1b771 !important; /* Gold date */
+}
+
 .error {
     text-align: center;
     padding: 2rem;
