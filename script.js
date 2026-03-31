@@ -46,14 +46,7 @@ class PrayerTimeApp {
 
     bindEvents() {
         this.stateSelect.addEventListener('change', (e) => this.onStateChange(e.target.value));
-        this.zoneSelect.addEventListener('change', (e) => {
-            this.onZoneChange(e.target.value);
-            this.updateZoneDisplayText();
-        });
-        this.zoneSelect.addEventListener('focus', () => this.restoreZoneFullText());
-        this.zoneSelect.addEventListener('blur', () => this.updateZoneDisplayText());
-        this.zoneSelect.addEventListener('mousedown', () => this.restoreZoneFullText());
-        // Removed save binding
+        this.zoneSelect.addEventListener('change', (e) => this.onZoneChange(e.target.value));
         this.retryBtn.addEventListener('click', () => this.retryLoadPrayerTimes());
     }
 
@@ -114,32 +107,9 @@ class PrayerTimeApp {
         this.zones.forEach(zone => {
             const option = document.createElement('option');
             option.value = zone.jakimCode;
-            const fullText = `${zone.jakimCode} - ${zone.daerah}`;
-            option.textContent = fullText;
-            option.setAttribute('data-short-text', zone.jakimCode);
-            option.setAttribute('data-full-text', fullText);
+            option.textContent = zone.daerah;
             this.zoneSelect.appendChild(option);
         });
-    }
-
-    updateZoneDisplayText() {
-        const selectedOption = this.zoneSelect.options[this.zoneSelect.selectedIndex];
-        if (selectedOption && selectedOption.value) {
-            const shortText = selectedOption.getAttribute('data-short-text');
-            if (shortText) {
-                selectedOption.textContent = shortText;
-            }
-        }
-    }
-
-    restoreZoneFullText() {
-        for (let i = 1; i < this.zoneSelect.options.length; i++) { // Start from 1 to skip "Select Zone"
-            const option = this.zoneSelect.options[i];
-            const fullText = option.getAttribute('data-full-text');
-            if (fullText) {
-                option.textContent = fullText;
-            }
-        }
     }
 
     async onZoneChange(selectedZone) {
