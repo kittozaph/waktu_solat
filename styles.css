@@ -230,9 +230,11 @@ select:disabled {
 }
 
 .morning-container .prayer-card.active:hover {
-    transform: none;
+    transform: scale(1.05); /* Magnify physically outward ~6px */
     background: #1b3826;
-    box-shadow: 0 0 20px rgba(201, 171, 95, 0.5); /* Gold glow */
+    box-shadow: 0 0 35px rgba(201, 171, 95, 0.9), 0 0 15px rgba(201, 171, 95, 1); /* Extremely bold gold glow */
+    border: 1px solid #c9ab5f;
+    border-radius: 12px;
     z-index: 10;
 }
 
@@ -271,8 +273,8 @@ select:disabled {
 
 .prayer-card.active:hover {
     background: #1b3826;
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 0 25px rgba(201, 171, 95, 0.6); /* Enhanced Gold Glow */
+    transform: scale(1.1) translateY(-4px); /* Extra magnification */
+    box-shadow: 0 0 35px rgba(201, 171, 95, 0.9), 0 0 15px rgba(201, 171, 95, 1); /* Extremely bold gold glow */
     border-color: #c9ab5f;
     z-index: 10;
 }
