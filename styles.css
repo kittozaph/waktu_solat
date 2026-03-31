@@ -99,6 +99,37 @@ select:disabled {
     margin-top: 1.5rem;
 }
 
+/* Elegant Segment Dividers */
+.section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2.5rem 0;
+}
+
+.section-divider::before,
+.section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 171, 95, 0.5));
+    margin: 0 1rem;
+    max-width: 150px;
+}
+
+.section-divider::after {
+    background: linear-gradient(-90deg, transparent, rgba(201, 171, 95, 0.5));
+}
+
+.section-divider-icon {
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: #c9ab5f; /* Gold diamond */
+    transform: rotate(45deg);
+    opacity: 0.8;
+}
+
 .current-time {
     text-align: center;
     margin-bottom: 2rem;
@@ -126,7 +157,7 @@ select:disabled {
 
 .next-prayer {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
     padding: 1.5rem;
     background: #fff;
     border: 1px solid #e8e6e1;
