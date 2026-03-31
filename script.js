@@ -216,7 +216,7 @@ class PrayerTimeApp {
             }
             
             const dateObj = new Date(year, month, dayData.day);
-            const dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
             
             const fajrTime = this.timestampToTime(dayData.fajr);
             const imsakTime = this.calculateImsak(fajrTime);
@@ -283,12 +283,12 @@ class PrayerTimeApp {
         const now = new Date();
         const prayers = [
             { name: 'Imsak', time: this.prayerTimes.imsak, element: 'imsak' },
-            { name: 'Subuh', time: this.prayerTimes.fajr, element: 'fajr' },
-            { name: 'Syuruk', time: this.prayerTimes.syuruk, element: 'syuruk' },
-            { name: 'Zohor', time: this.prayerTimes.dhuhr, element: 'dhuhr' },
-            { name: 'Asar', time: this.prayerTimes.asr, element: 'asr' },
+            { name: 'Fajr', time: this.prayerTimes.fajr, element: 'fajr' },
+            { name: 'Sunrise', time: this.prayerTimes.syuruk, element: 'syuruk' },
+            { name: 'Dhuhr', time: this.prayerTimes.dhuhr, element: 'dhuhr' },
+            { name: 'Asr', time: this.prayerTimes.asr, element: 'asr' },
             { name: 'Maghrib', time: this.prayerTimes.maghrib, element: 'maghrib' },
-            { name: 'Isyak', time: this.prayerTimes.isha, element: 'isha' }
+            { name: 'Isha', time: this.prayerTimes.isha, element: 'isha' }
         ];
 
         // Clear previous active states
