@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f6f5ef;
+    background-color: #f6f5ef; /* Off-white */
     color: #2c2a28;
     min-height: 100vh;
 }
@@ -27,7 +27,7 @@ h1 {
     font-weight: 300;
     letter-spacing: -0.02em;
     margin-bottom: 1.5rem;
-    color: #1a1918;
+    color: #1b3826; /* Deep Green */
 }
 
 .location-selector {
@@ -56,21 +56,21 @@ h1 {
 .selector-group label {
     font-weight: 500;
     font-size: 0.85rem;
-    color: #666;
+    color: #556b5a; /* Greyish Green */
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 select {
     padding: 0.75rem 2.5rem 0.75rem 1rem;
-    border: 1px solid #e8e6e1;
+    border: 1px solid #e1decf; /* Slightly warm border */
     border-radius: 10px;
-    background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%232c2a28" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>') no-repeat right 1rem center;
+    background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%231b3826" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>') no-repeat right 1rem center;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     font-size: 0.95rem;
-    color: #2c2a28;
+    color: #1b3826;
     cursor: pointer;
     transition: all 0.2s ease;
     outline: none;
@@ -82,8 +82,8 @@ select {
 }
 
 select:focus {
-    border-color: #b5b3a9;
-    box-shadow: 0 0 0 3px rgba(181, 179, 169, 0.15);
+    border-color: #c9ab5f; /* Gold border on focus */
+    box-shadow: 0 0 0 3px rgba(201, 171, 95, 0.2);
 }
 
 select:disabled {
@@ -94,7 +94,8 @@ select:disabled {
 
 .current-location {
     font-size: 0.95rem;
-    color: #666;
+    color: #c9ab5f; /* Gold */
+    font-weight: 500;
     margin-top: 1.5rem;
 }
 
@@ -114,13 +115,13 @@ select:disabled {
     font-size: 3.5rem;
     font-weight: 200;
     letter-spacing: -0.04em;
-    color: #1a1918;
+    color: #1b3826; /* Deep Green */
     font-variant-numeric: tabular-nums;
 }
 
 #current-date {
     font-size: 1.1rem;
-    color: #666;
+    color: #a3a19b; /* Subtle Grey */
 }
 
 .next-prayer {
@@ -142,20 +143,20 @@ select:disabled {
 }
 
 .next-prayer-label {
-    color: #666;
+    color: #a3a19b;
     font-size: 1.1rem;
 }
 
 #next-prayer-name {
     font-size: 1.5rem;
     font-weight: 500;
-    color: #1a1918;
+    color: #c9ab5f; /* Gold */
 }
 
 #next-prayer-countdown {
     font-size: 1.5rem;
     font-variant-numeric: tabular-nums;
-    color: #1a1918;
+    color: #1b3826; /* Deep Green */
 }
 
 .morning-container {
@@ -183,7 +184,7 @@ select:disabled {
 
 .morning-container .prayer-card:hover {
     transform: none;
-    background: #fafafa;
+    background: #fdfdf9; /* Very slight warm grey-white on hover */
 }
 
 .morning-container .prayer-card.active {
@@ -210,26 +211,30 @@ select:disabled {
 
 .prayer-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 6px 20px rgba(27,56,38,0.06);
 }
 
+/* Active Prayer State (Green and Gold) */
 .prayer-card.active {
-    background: #1a1918;
+    background: #1b3826; /* Deep Emerald Green */
     color: #fff;
-    border-color: #1a1918;
+    border-color: #1b3826;
     transform: scale(1.05);
-    box-shadow: 0 10px 30px rgba(26,25,24,0.15);
+    box-shadow: 0 10px 30px rgba(27,56,38,0.25);
+}
+
+.prayer-card.active .prayer-time {
+    color: #fff;
 }
 
 .prayer-card.active .prayer-name,
-.prayer-card.active .prayer-time,
 .prayer-card.active .prayer-arabic {
-    color: #fff;
+    color: #d1b771; /* Elegant Gold */
 }
 
 .prayer-name {
     font-size: 0.9rem;
-    color: #666;
+    color: #6d6b63;
     margin-bottom: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -239,14 +244,14 @@ select:disabled {
 .prayer-time {
     font-size: 1.4rem;
     font-weight: 500;
-    color: #1a1918;
+    color: #1b3826;
     margin-bottom: 0.5rem;
     font-variant-numeric: tabular-nums;
 }
 
 .prayer-arabic {
     font-size: 0.85rem;
-    color: #999;
+    color: #a3a19b;
 }
 
 .error {
@@ -261,7 +266,7 @@ select:disabled {
 #retry-btn {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
-    background: #1a1918;
+    background: #1b3826; /* Deep Green */
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -271,14 +276,14 @@ select:disabled {
 }
 
 #retry-btn:hover {
-    background: #3a3835;
+    background: #285439; /* Slightly lighter forest green */
 }
 
 footer {
     text-align: center;
     margin-top: 4rem;
     font-size: 0.85rem;
-    color: #999;
+    color: #a3a19b;
 }
 
 @media (max-width: 768px) {
