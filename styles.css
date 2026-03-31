@@ -230,10 +230,9 @@ select:disabled {
 }
 
 .morning-container .prayer-card.active:hover {
-    transform: scale(1.05); /* Magnify physically outward ~6px */
+    transform: scale(1.05);
     background: #1b3826;
-    box-shadow: 0 0 35px rgba(201, 171, 95, 0.9), 0 0 15px rgba(201, 171, 95, 1); /* Extremely bold gold glow */
-    border: 1px solid #c9ab5f;
+    box-shadow: 0 0 0 1px #c9ab5f, 0 0 35px rgba(201, 171, 95, 0.9), 0 0 15px rgba(201, 171, 95, 1);
     border-radius: 12px;
     z-index: 10;
 }
@@ -257,8 +256,8 @@ select:disabled {
 }
 
 .prayer-card:not(.active):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(27,56,38,0.06);
+    transform: none;
+    background: #fdfdf9;
 }
 
 /* Active Prayer State (Green and Gold) */
