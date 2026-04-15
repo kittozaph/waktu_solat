@@ -8,6 +8,8 @@ class PrayerTimeApp {
         this.nextPrayerTimeout = null;
         this.nextPrayerMinutes = null;
         this.mainTimer = null;
+        this.fullMonthData = null;
+        this.lastProcessedDate = null;
 
         this.initializeElements();
         this.bindEvents();
@@ -143,14 +145,24 @@ class PrayerTimeApp {
             }
 
             const data = await response.json();
-            this.prayerTimes = this.getTodaysPrayerTimes(data);
-            this.displayPrayerTimes(this.prayerTimes);
-            this.updateNextPrayer();
+            this.fullMonthData = data;
+            this.refreshPrayerTimes();
             this.displayMonthlyTable(data);
 
         } catch (error) {
             console.error('Error loading prayer times:', error);
             this.showError('Failed to load prayer times. Please try again.');
+        }
+    }
+
+    refreshPrayerTimes() {
+        if (!this.fullMonthData) return;
+        
+        this.prayerTimes = this.getTodaysPrayerTimes(this.fullMonthData);
+        if (this.prayerTimes) {
+            this.displayPrayerTimes(this.prayerTimes);
+            this.updateNextPrayer();
+            this.lastProcessedDate = new Date().getDate();
         }
     }
 
@@ -278,13 +290,15 @@ class PrayerTimeApp {
     }
 
     updateNextPrayer() {
-        if (!this.prayerTimes) return;
+        if (!this.prayerTimes || !this.fullMonthData) return;
 
         const now = new Date();
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        
         const prayers = [
             { name: 'Imsak', time: this.prayerTimes.imsak, element: 'imsak' },
             { name: 'Fajr', time: this.prayerTimes.fajr, element: 'fajr' },
-            { name: 'Sunrise', time: this.prayerTimes.syuruk, element: 'syuruk' },
+            { name: 'Syuruk', time: this.prayerTimes.syuruk, element: 'syuruk' },
             { name: 'Dhuhr', time: this.prayerTimes.dhuhr, element: 'dhuhr' },
             { name: 'Asr', time: this.prayerTimes.asr, element: 'asr' },
             { name: 'Maghrib', time: this.prayerTimes.maghrib, element: 'maghrib' },
@@ -297,10 +311,6 @@ class PrayerTimeApp {
         });
 
         let nextPrayer = null;
-        const nowMinutes = now.getHours() * 60 + now.getMinutes();
-
-        // Show/hide Imsak and Syuruk based on current time
-        this.updateImsakSyurukVisibility(nowMinutes, prayers);
 
         for (const prayer of prayers) {
             const [hours, minutes] = prayer.time.split(':').map(Number);
@@ -312,14 +322,40 @@ class PrayerTimeApp {
             }
         }
 
-        // If no prayer found for today, next prayer is Fajr tomorrow
+        // If no prayer found for today, next prayer is tomorrow's first prayer
         if (!nextPrayer) {
-            const [hours, minutes] = prayers[0].time.split(':').map(Number);
-            const fajrMinutes = hours * 60 + minutes;
-            nextPrayer = {
-                ...prayers[0],
-                minutes: fajrMinutes + (24 * 60) // Add 24 hours worth of minutes
-            };
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            
+            let tomorrowPrayerTimes = null;
+            
+            // Try to find tomorrow's data in the currently loaded month data
+            if (this.fullMonthData && this.fullMonthData.prayers) {
+                const tomorrowData = this.fullMonthData.prayers.find(p => p.day === tomorrow.getDate());
+                if (tomorrowData && tomorrow.getMonth() + 1 === this.fullMonthData.month_number) {
+                    const fajrTime = this.timestampToTime(tomorrowData.fajr);
+                    tomorrowPrayerTimes = {
+                        name: 'Imsak',
+                        time: this.calculateImsak(fajrTime),
+                        element: 'imsak'
+                    };
+                }
+            }
+            
+            if (tomorrowPrayerTimes) {
+                const [hours, minutes] = tomorrowPrayerTimes.time.split(':').map(Number);
+                nextPrayer = {
+                    ...tomorrowPrayerTimes,
+                    minutes: (hours * 60 + minutes) + (24 * 60)
+                };
+            } else {
+                // Fallback to today's Imsak + 24h if tomorrow's data isn't available (e.g., end of month)
+                const [hours, minutes] = prayers[0].time.split(':').map(Number);
+                nextPrayer = {
+                    ...prayers[0],
+                    minutes: (hours * 60 + minutes) + (24 * 60)
+                };
+            }
         }
 
         // Highlight current prayer period
@@ -369,6 +405,11 @@ class PrayerTimeApp {
         const updateAll = () => {
             const now = new Date();
 
+            // Detect day change
+            if (this.lastProcessedDate !== null && now.getDate() !== this.lastProcessedDate) {
+                this.handleDayChange();
+            }
+
             // Update current time display
             const timeOptions = {
                 hour: '2-digit',
@@ -397,6 +438,21 @@ class PrayerTimeApp {
 
         updateAll();
         this.mainTimer = setInterval(updateAll, 1000);
+    }
+
+    handleDayChange() {
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+
+        // If month/year changed, we need new data. Otherwise just refresh from stored.
+        if (this.fullMonthData && (this.fullMonthData.month_number !== month || this.fullMonthData.year !== year)) {
+            if (this.currentZone) {
+                this.loadPrayerTimes(this.currentZone.jakimCode);
+            }
+        } else {
+            this.refreshPrayerTimes();
+        }
     }
 
     updateCountdownDisplay(now) {
